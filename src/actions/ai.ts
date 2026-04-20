@@ -1,6 +1,5 @@
 'use server'
 
-import Anthropic from '@anthropic-ai/sdk'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/db'
 import { aiInsights } from '@/db/schema'
@@ -15,8 +14,49 @@ import {
 } from '@/lib/calculations'
 import type { PortfolioInsightData } from '@/types'
 
-const client = new Anthropic()
-const MODEL  = 'claude-sonnet-4-20250514'
+const MODEL = 'gemini-2.0-flash'
+
+async function generateGeminiText(prompt: string, maxOutputTokens: number): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_API_KEY
+  if (!apiKey) {
+    throw new Error('Missing GEMINI_API_KEY (or GOOGLE_API_KEY)')
+  }
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          maxOutputTokens,
+          temperature: 0.7,
+        },
+      }),
+    }
+  )
+
+  if (!response.ok) {
+    const details = await response.text()
+    throw new Error(`Gemini request failed (${response.status}): ${details}`)
+  }
+
+  const data = await response.json() as {
+    candidates?: Array<{
+      content?: {
+        parts?: Array<{ text?: string }>
+      }
+    }>
+  }
+
+  const text = data.candidates?.[0]?.content?.parts?.map(part => part.text ?? '').join('').trim()
+  if (!text) {
+    throw new Error('Gemini returned empty response')
+  }
+
+  return text
+}
 
 // ─── Build insight data from DB ───────────────────────────────────────────────
 
@@ -117,14 +157,7 @@ export async function generatePortfolioInsight(): Promise<{ data?: string; error
   try {
     const insightData = await getPortfolioInsightData()
     const prompt      = buildPrompt(insightData)
-
-    const message = await client.messages.create({
-      model:      MODEL,
-      max_tokens: 500,
-      messages:   [{ role: 'user', content: prompt }],
-    })
-
-    const response = message.content[0].type === 'text' ? message.content[0].text : ''
+    const response    = await generateGeminiText(prompt, 500)
 
     await db.insert(aiInsights).values({
       snapshotAt: new Date(),
@@ -139,7 +172,7 @@ export async function generatePortfolioInsight(): Promise<{ data?: string; error
     return { data: response }
   } catch (err) {
     console.error('AI insight error:', err)
-    return { error: 'Failed to generate insight. Check your ANTHROPIC_API_KEY.' }
+    return { error: 'Failed to generate insight. Check your GEMINI_API_KEY.' }
   }
 }
 
@@ -170,14 +203,6 @@ export async function getAllInsights() {
 // ─── Short summary for email ──────────────────────────────────────────────────
 
 export async function generateEmailSummary(data: PortfolioInsightData): Promise<string> {
-  const message = await client.messages.create({
-    model:      MODEL,
-    max_tokens: 150,
-    messages: [{
-      role:    'user',
-      content: `Summarise this South African investor's portfolio in 2 sentences for a reminder email. Be direct. Total deposited: R${data.totalDeposited.toFixed(2)}, current value: R${data.currentValue.toFixed(2)}, P&L: R${data.pnl.toFixed(2)} (${data.pnlPct.toFixed(2)}%). Worst holding: ${data.holdings.sort((a, b) => a.returnPct - b.returnPct)[0]?.name ?? 'n/a'}.`,
-    }],
-  })
-
-  return message.content[0].type === 'text' ? message.content[0].text : ''
+  const prompt = `Summarise this South African investor's portfolio in 2 sentences for a reminder email. Be direct. Total deposited: R${data.totalDeposited.toFixed(2)}, current value: R${data.currentValue.toFixed(2)}, P&L: R${data.pnl.toFixed(2)} (${data.pnlPct.toFixed(2)}%). Worst holding: ${data.holdings.sort((a, b) => a.returnPct - b.returnPct)[0]?.name ?? 'n/a'}.`
+  return generateGeminiText(prompt, 150)
 }

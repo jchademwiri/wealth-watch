@@ -35,37 +35,52 @@ export async function createAsset(input: z.infer<typeof insertAssetSchema>) {
     return { error: parsed.error.flatten().fieldErrors }
   }
 
-  const [asset] = await db.insert(assets).values(parsed.data).returning()
-  revalidatePath('/')
-  revalidatePath('/dashboard/assets')
-  return { data: asset }
+  try {
+    const [asset] = await db.insert(assets).values(parsed.data).returning()
+    revalidatePath('/')
+    revalidatePath('/dashboard/assets')
+    return { data: asset }
+  } catch (error) {
+    console.error('Failed to create asset:', error)
+    return { error: 'Failed to create asset' }
+  }
 }
 
 export async function updateAsset(
   id: string,
   input: Partial<z.infer<typeof insertAssetSchema>>
 ) {
-  const [asset] = await db
-    .update(assets)
-    .set({ ...input, updatedAt: new Date() })
-    .where(eq(assets.id, id))
-    .returning()
+  try {
+    const [asset] = await db
+      .update(assets)
+      .set({ ...input, updatedAt: new Date() })
+      .where(eq(assets.id, id))
+      .returning()
 
-  revalidatePath('/')
-  revalidatePath('/dashboard/assets')
-  return { data: asset }
+    revalidatePath('/')
+    revalidatePath('/dashboard/assets')
+    return { data: asset }
+  } catch (error) {
+    console.error('Failed to update asset:', error)
+    return { error: 'Failed to update asset' }
+  }
 }
 
 export async function toggleAssetActive(id: string) {
-  const existing = await db.query.assets.findFirst({ where: eq(assets.id, id) })
-  if (!existing) return { error: 'Asset not found' }
+  try {
+    const existing = await db.query.assets.findFirst({ where: eq(assets.id, id) })
+    if (!existing) return { error: 'Asset not found' }
 
-  const [asset] = await db
-    .update(assets)
-    .set({ isActive: !existing.isActive, updatedAt: new Date() })
-    .where(eq(assets.id, id))
-    .returning()
+    const [asset] = await db
+      .update(assets)
+      .set({ isActive: !existing.isActive, updatedAt: new Date() })
+      .where(eq(assets.id, id))
+      .returning()
 
-  revalidatePath('/dashboard/assets')
-  return { data: asset }
+    revalidatePath('/dashboard/assets')
+    return { data: asset }
+  } catch (error) {
+    console.error('Failed to toggle asset active state:', error)
+    return { error: 'Failed to update asset status' }
+  }
 }

@@ -50,66 +50,71 @@ export async function saveBulkSnapshot(
 ) {
   if (entries.length === 0) return { error: 'No entries provided' }
 
-  // Upsert individual asset snapshots
-  for (const entry of entries) {
-    // Delete existing snapshot for this asset on this date
-    const dayStart = new Date(date)
-    dayStart.setHours(0, 0, 0, 0)
-    const dayEnd = new Date(date)
-    dayEnd.setHours(23, 59, 59, 999)
+  try {
+    // Upsert individual asset snapshots
+    for (const entry of entries) {
+      // Delete existing snapshot for this asset on this date
+      const dayStart = new Date(date)
+      dayStart.setHours(0, 0, 0, 0)
+      const dayEnd = new Date(date)
+      dayEnd.setHours(23, 59, 59, 999)
 
-    const existing = await db.query.snapshots.findFirst({
-      where: and(
-        eq(snapshots.assetId, entry.assetId),
-        gte(snapshots.snapshotAt, dayStart),
-        lte(snapshots.snapshotAt, dayEnd),
-      ),
-    })
-
-    if (existing) {
-      await db
-        .update(snapshots)
-        .set({ value: entry.value })
-        .where(eq(snapshots.id, existing.id))
-    } else {
-      await db.insert(snapshots).values({
-        assetId:    entry.assetId,
-        value:      entry.value,
-        snapshotAt: date,
+      const existing = await db.query.snapshots.findFirst({
+        where: and(
+          eq(snapshots.assetId, entry.assetId),
+          gte(snapshots.snapshotAt, dayStart),
+          lte(snapshots.snapshotAt, dayEnd),
+        ),
       })
+
+      if (existing) {
+        await db
+          .update(snapshots)
+          .set({ value: entry.value })
+          .where(eq(snapshots.id, existing.id))
+      } else {
+        await db.insert(snapshots).values({
+          assetId:    entry.assetId,
+          value:      entry.value,
+          snapshotAt: date,
+        })
+      }
     }
-  }
 
-  // Re-compute portfolio aggregate
-  const totalValue    = entries.reduce((s, e) => s + parseFloat(e.value), 0)
-  const allDeposits   = await db.query.deposits.findMany()
-  const totalDeposited = calcDepositedAsOf(allDeposits, date)
-  const pnl           = calcPnL(totalValue, totalDeposited)
-  const pnlPct        = calcReturnPct(totalValue, totalDeposited)
+    // Re-compute portfolio aggregate
+    const totalValue    = entries.reduce((s, e) => s + parseFloat(e.value), 0)
+    const allDeposits   = await db.query.deposits.findMany()
+    const totalDeposited = calcDepositedAsOf(allDeposits, date)
+    const pnl           = calcPnL(totalValue, totalDeposited)
+    const pnlPct        = calcReturnPct(totalValue, totalDeposited)
 
-  await db
-    .insert(portfolioSnapshots)
-    .values({
-      snapshotAt:     date,
-      totalValue:     totalValue.toFixed(2),
-      totalDeposited: totalDeposited.toFixed(2),
-      pnl:            pnl.toFixed(2),
-      pnlPct:         pnlPct.toFixed(4),
-    })
-    .onConflictDoUpdate({
-      target: portfolioSnapshots.snapshotAt,
-      set: {
+    await db
+      .insert(portfolioSnapshots)
+      .values({
+        snapshotAt:     date,
         totalValue:     totalValue.toFixed(2),
         totalDeposited: totalDeposited.toFixed(2),
         pnl:            pnl.toFixed(2),
         pnlPct:         pnlPct.toFixed(4),
-      },
-    })
+      })
+      .onConflictDoUpdate({
+        target: portfolioSnapshots.snapshotAt,
+        set: {
+          totalValue:     totalValue.toFixed(2),
+          totalDeposited: totalDeposited.toFixed(2),
+          pnl:            pnl.toFixed(2),
+          pnlPct:         pnlPct.toFixed(4),
+        },
+      })
 
-  revalidatePath('/')
-  revalidatePath('/dashboard/snapshots')
+    revalidatePath('/')
+    revalidatePath('/dashboard/snapshots')
 
-  return { ok: true, totalValue, totalDeposited, pnl, pnlPct }
+    return { ok: true, totalValue, totalDeposited, pnl, pnlPct }
+  } catch (error) {
+    console.error('Failed to save bulk snapshot:', error)
+    return { error: 'Failed to save snapshot' }
+  }
 }
 
 /**
