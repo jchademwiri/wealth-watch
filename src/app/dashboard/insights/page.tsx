@@ -21,8 +21,8 @@ export default async function InsightsPage() {
       {insights.length === 0 ? (
         <EmptyState
           icon={Sparkles}
-          title="AI insights are coming soon."
-          description="We are still fixing the AI key and quota setup before turning this section back on."
+          title="No insights yet."
+          description="AI-generated insights will appear here once you start saving portfolio snapshots."
         />
       ) : (
         <div className="space-y-4">

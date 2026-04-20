@@ -112,9 +112,8 @@ export function AIInsightCard({ initialInsight }: Props) {
 
       {!insight && !loading && !error && (
         <EmptyState
-          badge="Coming soon"
-          title="AI insights are temporarily on hold."
-          description="This section will be enabled again once the AI key and quota are sorted out."
+          title="Generate an insight"
+          description="Click refresh to generate your first AI-powered portfolio analysis."
           className="border-dashed bg-muted/40 shadow-none"
         />
       )}
