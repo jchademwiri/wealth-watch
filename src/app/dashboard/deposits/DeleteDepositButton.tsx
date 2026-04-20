@@ -12,7 +12,9 @@ export function DeleteDepositButton({ id }: { id: string }) {
       disabled={pending}
       onClick={() => {
         if (!confirm('Delete this deposit?')) return
-        startTransition(() => deleteDeposit(id))
+        startTransition(() => {
+          void deleteDeposit(id)
+        })
       }}
       className="rounded p-1 text-muted-foreground hover:bg-red-50 hover:text-red-500 transition-colors disabled:opacity-50 dark:hover:bg-red-950"
     >

@@ -8,7 +8,7 @@ import { generateEmailSummary } from '@/actions/ai'
 import { getPortfolioSummary } from '@/lib/portfolio'
 import { calcReturnPct } from '@/lib/calculations'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function GET(req: NextRequest) {
   // ── Auth guard ──────────────────────────────────────────────────────────────
@@ -55,6 +55,11 @@ export async function GET(req: NextRequest) {
     }
 
     // ── Send email ─────────────────────────────────────────────────────────────
+    if (!resend) {
+      console.error('Missing RESEND_API_KEY')
+      return NextResponse.json({ error: 'Missing RESEND_API_KEY' }, { status: 500 })
+    }
+
     const { data, error } = await resend.emails.send({
       from:    `WealthWatch <noreply@${process.env.RESEND_DOMAIN ?? 'yourdomain.com'}>`,
       to:      settings.reminderEmail,

@@ -180,9 +180,10 @@ export async function generatePortfolioInsight(): Promise<{ data?: string; error
 
 export async function getLatestInsight() {
   try {
-    return await db.query.aiInsights.findFirst({
+    const insight = await db.query.aiInsights.findFirst({
       orderBy: desc(aiInsights.createdAt),
     })
+    return insight ?? null
   } catch (error) {
     console.error('Failed to load latest insight:', error)
     return null
