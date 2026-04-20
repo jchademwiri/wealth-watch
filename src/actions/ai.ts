@@ -172,7 +172,7 @@ export async function generatePortfolioInsight(): Promise<{ data?: string; error
     return { data: response }
   } catch (err) {
     console.error('AI insight error:', err)
-    return { error: 'Failed to generate insight. Check your GEMINI_API_KEY.' }
+    return { error: err instanceof Error ? err.message : 'Failed to generate insight. Check your GEMINI_API_KEY.' }
   }
 }
 
