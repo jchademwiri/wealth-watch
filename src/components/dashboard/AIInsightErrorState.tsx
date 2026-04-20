@@ -36,7 +36,7 @@ export function AIInsightErrorState({
   const retryMessage = formatRetryDelay(countdownSeconds, autoRetryEnabled);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-background shadow-sm">
+    <div className="overflow-hidden rounded-md border border-border/60 bg-background shadow-sm">
       {/* Header */}
       <div className="flex items-start gap-3 border-b border-border/50 px-5 py-4">
         <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400">
