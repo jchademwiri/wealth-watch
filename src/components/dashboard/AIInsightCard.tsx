@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { Sparkles, RefreshCw } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { type AiInsightError, generatePortfolioInsight } from "@/actions/ai";
@@ -97,6 +97,14 @@ export function AIInsightCard({ initialInsight }: Props) {
             AI portfolio insight
           </h3>
         </div>
+        <button
+          onClick={() => void handleRefresh()}
+          disabled={loading}
+          className="flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-xs text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+        >
+          <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
+          {loading ? "Generating..." : "Generate"}
+        </button>
       </div>
 
       {error && (
@@ -112,8 +120,8 @@ export function AIInsightCard({ initialInsight }: Props) {
 
       {!insight && !loading && !error && (
         <EmptyState
-          title="Generate an insight"
-          description="Click refresh to generate your first AI-powered portfolio analysis."
+          title="No insight yet"
+          description="Click Generate to create your first AI-powered portfolio analysis."
           className="border-dashed bg-muted/40 shadow-none"
         />
       )}
