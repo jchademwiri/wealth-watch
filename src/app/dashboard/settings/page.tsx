@@ -19,7 +19,7 @@ export default async function SettingsPage() {
           Manage your reminder schedule and preferences.
         </p>
       </div>
-      <div className="mx-auto max-w-lg">
+      <div className="mx-auto max-w-5xl">
         <SettingsForm initialSettings={settings ?? null} />
       </div>
     </div>

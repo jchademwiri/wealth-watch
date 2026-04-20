@@ -16,6 +16,20 @@ export default async function NewSnapshotPage() {
   if (assets.length === 0) {
     return (
       <div className="p-4 md:p-6">
+        <div className="mb-6 flex items-center gap-3">
+          <Link
+            href="/dashboard/snapshots"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+          <div>
+            <h1 className="text-xl font-semibold">Weekly update</h1>
+            <p className="text-sm text-muted-foreground">
+              Check your broker and Luno balances, then enter current values below.
+            </p>
+          </div>
+        </div>
         <div className="mx-auto max-w-2xl">
           <EmptyState
             icon={Camera}

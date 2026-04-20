@@ -83,6 +83,17 @@
   --sidebar-ring: oklch(0.669 0.096 200.1 / 40%);
 }
 
+button,
+a {
+  cursor: pointer;
+}
+
+button:disabled,
+button[disabled],
+a[disabled] {
+  cursor: not-allowed;
+}
+
 .dark {
   --background: oklch(0.19 0.018 248.1);
   --foreground: oklch(0.972 0.008 95.8);
@@ -130,15 +141,11 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(
-        circle at top left,
+      radial-gradient(circle at top left,
         color-mix(in oklch, var(--color-primary) 10%, transparent) 0,
-        transparent 28rem
-      ),
-      linear-gradient(
-        180deg,
+        transparent 28rem),
+      linear-gradient(180deg,
         color-mix(in oklch, var(--color-background) 94%, white 6%) 0%,
-        var(--color-background) 100%
-      );
+        var(--color-background) 100%);
   }
 }
