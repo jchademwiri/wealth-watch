@@ -48,7 +48,7 @@ export function PortfolioChart({ snapshots }: Props) {
   }
 
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="h-full rounded-lg border bg-card p-4">
       <h3 className="mb-4 text-sm font-medium text-muted-foreground">Deposited vs portfolio value</h3>
       <div className="mb-3 flex gap-4">
         <LegendItem color="#378ADD" label="Total deposited" dashed={false} filled />

@@ -34,7 +34,7 @@ export function AllocationDonut({ assets }: Props) {
   }
 
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="flex h-full flex-col rounded-lg border bg-card p-4">
       <h3 className="mb-4 text-sm font-medium text-muted-foreground">Current allocation</h3>
       <ResponsiveContainer width="100%" height={180}>
         <PieChart>

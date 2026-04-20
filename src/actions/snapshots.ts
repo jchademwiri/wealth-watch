@@ -9,7 +9,7 @@ import { calcDepositedAsOf, calcPnL, calcReturnPct } from '@/lib/calculations'
 export async function getPortfolioSnapshots() {
   try {
     return await db.query.portfolioSnapshots.findMany({
-      orderBy: (p, { asc }) => [asc(p.snapshotAt)],
+      orderBy: (p, { desc }) => [desc(p.snapshotAt)],
     })
   } catch (error) {
     console.error('Failed to load portfolio snapshots:', error)
@@ -32,7 +32,7 @@ export async function getSnapshotsByAsset(assetId: string) {
   try {
     return await db.query.snapshots.findMany({
       where: eq(snapshots.assetId, assetId),
-      orderBy: (s, { asc }) => [asc(s.snapshotAt)],
+      orderBy: (s, { desc }) => [desc(s.snapshotAt)],
     })
   } catch (error) {
     console.error('Failed to load snapshots by asset:', error)

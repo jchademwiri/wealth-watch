@@ -53,8 +53,8 @@ export default async function SnapshotsPage() {
                   const totalDeposited = parseFloat(snap.totalDeposited)
                   const pnl           = parseFloat(snap.pnl)
                   const pnlPct        = parseFloat(snap.pnlPct)
-                  const prevSnap      = idx > 0 ? snapshots[idx - 1] : null
-                  const prevValue     = prevSnap ? parseFloat(prevSnap.totalValue) : null
+                  const olderSnap     = idx < snapshots.length - 1 ? snapshots[idx + 1] : null
+                  const prevValue     = olderSnap ? parseFloat(olderSnap.totalValue) : null
                   const weekChange    = prevValue ? totalValue - prevValue : null
 
                   return (

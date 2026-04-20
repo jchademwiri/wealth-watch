@@ -71,11 +71,13 @@ export default async function DashboardPage() {
         twrr={summary.twrr}
       />
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="md:col-span-2">
+      <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
+        <div className="h-full md:col-span-2">
           <PortfolioChart snapshots={summary.snapshots} />
         </div>
-        <AllocationDonut assets={summary.assets} />
+        <div className="h-full">
+          <AllocationDonut assets={summary.assets} />
+        </div>
       </div>
 
       <HoldingsTable
