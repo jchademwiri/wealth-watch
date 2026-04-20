@@ -14,7 +14,7 @@ import {
 } from "@/lib/calculations";
 import type { PortfolioInsightData } from "@/types";
 
-const MODEL = "gemini-2.0-flash";
+const MODEL = "google/gemini-2.0-flash";
 
 export interface AiInsightError {
   title: string;
@@ -29,47 +29,53 @@ async function generateGeminiText(
   prompt: string,
   maxOutputTokens: number,
 ): Promise<string> {
-  const geminiKey = process.env.GEMINI_API_KEY;
-  const googleKey = process.env.GOOGLE_API_KEY;
-  const apiKey = geminiKey ?? googleKey;
-  if (!apiKey) {
-    throw new Error("Missing GEMINI_API_KEY or GOOGLE_API_KEY");
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY;
+  if (!gatewayKey) {
+    throw new Error("Missing AI_GATEWAY_API_KEY");
   }
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`,
+    "https://ai-gateway.vercel.sh/v1/chat/completions",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${gatewayKey}`,
+      },
       body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          maxOutputTokens,
-          temperature: 0.7,
-        },
+        model: "google/gemini-2.0-flash",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: maxOutputTokens,
+        temperature: 0.7,
       }),
     },
   );
 
   if (!response.ok) {
     const details = await response.text();
-    throw new Error(`Gemini request failed (${response.status}): ${details}`);
+    throw new Error(
+      `AI Gateway request failed (${response.status}): ${details}`,
+    );
   }
 
   const data = (await response.json()) as {
-    candidates?: Array<{
-      content?: {
-        parts?: Array<{ text?: string }>;
+    choices?: Array<{
+      message?: {
+        content?: string;
       };
     }>;
+    error?: {
+      message?: string;
+    };
   };
 
-  const text = data.candidates?.[0]?.content?.parts
-    ?.map((part) => part.text ?? "")
-    .join("")
-    .trim();
+  if (data.error) {
+    throw new Error(`AI Gateway error: ${data.error.message}`);
+  }
+
+  const text = data.choices?.[0]?.message?.content?.trim();
   if (!text) {
-    throw new Error("Gemini returned empty response");
+    throw new Error("AI Gateway returned empty response");
   }
 
   return text;
@@ -246,34 +252,39 @@ function formatAiError(error: unknown): AiInsightError {
       );
     });
 
-  if (/quota/i.test(message) || /RESOURCE_EXHAUSTED/.test(message)) {
+  if (
+    /quota/i.test(message) ||
+    /RESOURCE_EXHAUSTED/.test(message) ||
+    /rate limit/i.test(message)
+  ) {
     return {
-      title: "Gemini quota reached",
+      title: "AI quota reached",
       message:
-        "The AI provider rejected this request because the current Gemini key has no available quota or billing access.",
+        "The AI provider rejected this request because the current key has no available quota.",
       suggestion:
-        "Check your Gemini or Google AI plan, confirm the API key in `.env.local`, and try again once quota is available.",
+        "Check your AI Gateway or provider plan, confirm the AI_GATEWAY_API_KEY in `.env.local`, and try again once quota is available.",
       statusCode: apiError?.code ?? 429,
       retryAfter: retryDelay,
       details: quotaViolations?.length
         ? Array.from(new Set(quotaViolations))
-        : ["Request quota is unavailable for the configured Gemini model."],
+        : ["Request quota is unavailable for the configured AI model."],
     };
   }
 
-  if (/Missing GEMINI_API_KEY|Missing GOOGLE_API_KEY/i.test(message)) {
+  if (/Missing AI_GATEWAY_API_KEY/i.test(message)) {
     return {
-      title: "Missing AI API key",
-      message: "No Gemini API key is configured for this app.",
+      title: "Missing AI Gateway key",
+      message: "No AI Gateway API key is configured for this app.",
       suggestion:
-        "Set `GEMINI_API_KEY` or `GOOGLE_API_KEY` in `.env.local`, then restart the app.",
+        "Set `AI_GATEWAY_API_KEY` in `.env.local`, then restart the app.",
     };
   }
 
-  if (/Gemini returned empty response/i.test(message)) {
+  if (/empty response/i.test(message)) {
     return {
       title: "Empty AI response",
-      message: "Gemini completed the request but did not return any text.",
+      message:
+        "The AI provider completed the request but did not return any text.",
       suggestion:
         "Try refreshing again. If it keeps happening, reduce prompt size or inspect the provider response.",
     };
