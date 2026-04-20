@@ -22,20 +22,20 @@ async function seed() {
   await db.delete(snapshots)
   await db.delete(deposits)
   await db.delete(assets)
-  await db.delete(userSettings)
+  // await db.delete(userSettings)
   console.log('✓ Cleared existing data')
 
   // ── User settings ──────────────────────────────────────────────────────────
-  await db.insert(userSettings).values({
-    id:                1,
-    firstName:         'Jacob',
-    reminderEmail:     'your@email.com', // ← update this
-    reminderFrequency: 'weekly',
-    reminderDay:       'monday',
-    reminderTime:      '08:00',
-    currencySymbol:    'R',
-  })
-  console.log('✓ User settings created')
+  // await db.insert(userSettings).values({
+  //   id:                1,
+  //   firstName:         'Jacob Chademwiri',
+  //   reminderEmail:     'hello@example.com', // ← update this
+  //   reminderFrequency: 'weekly',
+  //   reminderDay:       'monday',
+  //   reminderTime:      '08:00',
+  //   currencySymbol:    'R',
+  // })
+  // console.log('✓ User settings created')
 
   // ── Assets ─────────────────────────────────────────────────────────────────
   const [largeCap, blueChip, tqqq, sp500, gold] = await db

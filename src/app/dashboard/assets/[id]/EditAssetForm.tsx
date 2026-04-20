@@ -4,6 +4,13 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateAsset } from '@/actions/assets'
 import type { Asset } from '@/db/schema'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const PRESET_COLORS = [
   '#1B3A8A', '#7F77DD', '#378ADD', '#D85A30',
@@ -92,17 +99,33 @@ export function EditAssetForm({ asset }: Props) {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="mb-1.5 block text-sm font-medium">Type</label>
-            <select name="type" defaultValue={asset.type}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-              {ASSET_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
+            <Select name="type" defaultValue={asset.type}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                {ASSET_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    {t.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium">Broker / platform</label>
-            <select name="broker" defaultValue={asset.broker}
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-              {BROKERS.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
-            </select>
+            <Select name="broker" defaultValue={asset.broker}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select broker" />
+              </SelectTrigger>
+              <SelectContent>
+                {BROKERS.map((b) => (
+                  <SelectItem key={b.value} value={b.value}>
+                    {b.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

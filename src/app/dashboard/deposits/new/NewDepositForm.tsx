@@ -4,6 +4,13 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { createDeposit } from '@/actions/deposits'
 import type { Asset } from '@/db/schema'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 interface Props {
   assets: Asset[]
@@ -42,16 +49,18 @@ export function NewDepositForm({ assets }: Props) {
       <div className="rounded-lg border bg-card p-4 space-y-4">
         <div>
           <label className="mb-1.5 block text-sm font-medium">Asset <span className="text-red-500">*</span></label>
-          <select
-            name="assetId"
-            required
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Select an asset…</option>
-            {assets.map(a => (
-              <option key={a.id} value={a.id}>{a.name}{a.ticker ? ` (${a.ticker})` : ''}</option>
-            ))}
-          </select>
+          <Select name="assetId" defaultValue="" disabled={pending} required>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select an asset…" />
+            </SelectTrigger>
+            <SelectContent>
+              {assets.map((a) => (
+                <SelectItem key={a.id} value={a.id}>
+                  {a.name}{a.ticker ? ` (${a.ticker})` : ''}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div>
