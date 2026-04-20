@@ -10,6 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   initialSettings: UserSettings | null
@@ -36,7 +39,7 @@ export function SettingsForm({ initialSettings }: Props) {
 
         <Section title="Display">
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Currency symbol</label>
+            <Label className="mb-1.5 block">Currency symbol</Label>
             <Select name="currencySymbol" defaultValue={s?.currencySymbol ?? 'R'} disabled={pending}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select currency" />
@@ -51,20 +54,16 @@ export function SettingsForm({ initialSettings }: Props) {
           </div>
         </Section>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="w-full rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60 cursor-pointer"
-        >
+        <Button type="submit" disabled={pending} className="w-full">
           {pending ? 'Saving…' : 'Save settings'}
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-6">
         <Section title="Email reminders">
           <Field label="Reminder email" name="reminderEmail" type="email" defaultValue={s?.reminderEmail ?? ''} placeholder="you@email.com" disabled={pending} />
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Frequency</label>
+            <Label className="mb-1.5 block">Frequency</Label>
             <Select name="reminderFrequency" defaultValue={s?.reminderFrequency ?? 'weekly'} disabled={pending}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select frequency" />
@@ -77,7 +76,7 @@ export function SettingsForm({ initialSettings }: Props) {
             </Select>
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Day of week</label>
+            <Label className="mb-1.5 block">Day of week</Label>
             <Select name="reminderDay" defaultValue={s?.reminderDay ?? 'monday'} disabled={pending}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select day" />
@@ -122,14 +121,14 @@ function Field({ label, name, type, defaultValue, placeholder, disabled }: {
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium">{label}</label>
-      <input
+      <Label htmlFor={name} className="mb-1.5 block">{label}</Label>
+      <Input
+        id={name}
         type={type}
         name={name}
         defaultValue={defaultValue}
         placeholder={placeholder}
         disabled={disabled}
-        className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
       />
     </div>
   )

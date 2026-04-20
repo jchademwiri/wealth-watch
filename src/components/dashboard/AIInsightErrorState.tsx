@@ -1,15 +1,17 @@
 "use client";
 
-import { AlertTriangle, Clock3, RotateCcw, Wrench } from "lucide-react";
-import type { AiInsightError } from "@/actions/ai";
+import { AlertTriangle, Clock3, RotateCcw, Wrench } from "lucide-react"
+import type { AiInsightError } from "@/actions/ai"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface Props {
-  error: AiInsightError;
-  loading: boolean;
-  countdownSeconds: number | null;
-  autoRetryEnabled: boolean;
-  onAutoRetryChange: (enabled: boolean) => void;
-  onRetry: () => void;
+  error: AiInsightError
+  loading: boolean
+  countdownSeconds: number | null
+  autoRetryEnabled: boolean
+  onAutoRetryChange: (enabled: boolean) => void
+  onRetry: () => void
 }
 
 function formatRetryDelay(seconds: number | null, autoRetryEnabled: boolean) {
@@ -81,22 +83,23 @@ export function AIInsightErrorState({
 
         {/* Actions */}
         <div className="flex items-center gap-2.5">
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={onRetry}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-100 px-3.5 py-1.5 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-400 dark:hover:bg-amber-900/60"
+            className="inline-flex items-center gap-1.5"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             {loading ? "Retrying…" : "Retry now"}
-          </button>
+          </Button>
           {countdownSeconds !== null && (
             <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={autoRetryEnabled}
-                onChange={(e) => onAutoRetryChange(e.target.checked)}
-                className="h-3.5 w-3.5 rounded border-border accent-amber-500"
+                onCheckedChange={(checked) => onAutoRetryChange(Boolean(checked))}
+                className="h-3.5 w-3.5"
               />
               Auto retry
             </label>

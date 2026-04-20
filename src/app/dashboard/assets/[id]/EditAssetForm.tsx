@@ -11,6 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 const PRESET_COLORS = [
   '#1B3A8A', '#7F77DD', '#378ADD', '#D85A30',
@@ -56,12 +60,12 @@ export function EditAssetForm({ asset }: Props) {
     setError(null)
     const fd = new FormData(e.currentTarget)
     const data = {
-      name:      fd.get('name') as string,
-      ticker:    (fd.get('ticker') as string) || null,
-      type:      fd.get('type') as any,
-      broker:    fd.get('broker') as any,
+      name: fd.get('name') as string,
+      ticker: (fd.get('ticker') as string) || null,
+      type: fd.get('type') as any,
+      broker: fd.get('broker') as any,
       color,
-      notes:     (fd.get('notes') as string) || null,
+      notes: (fd.get('notes') as string) || null,
     }
 
     startTransition(async () => {
@@ -78,27 +82,31 @@ export function EditAssetForm({ asset }: Props) {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="rounded-lg border bg-card p-4 space-y-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Asset name <span className="text-red-500">*</span></label>
-          <input
+          <Label htmlFor="name" className="mb-1.5 block">
+            Asset name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="name"
             name="name"
             required
             defaultValue={asset.name}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Ticker symbol <span className="text-muted-foreground">(optional)</span></label>
-          <input
+          <Label htmlFor="ticker" className="mb-1.5 block">
+            Ticker symbol <span className="text-muted-foreground">(optional)</span>
+          </Label>
+          <Input
+            id="ticker"
             name="ticker"
             defaultValue={asset.ticker ?? ''}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Type</label>
+            <Label className="mb-1.5 block">Type</Label>
             <Select name="type" defaultValue={asset.type}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select type" />
@@ -113,7 +121,7 @@ export function EditAssetForm({ asset }: Props) {
             </Select>
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium">Broker / platform</label>
+            <Label className="mb-1.5 block">Broker / platform</Label>
             <Select name="broker" defaultValue={asset.broker}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select broker" />
@@ -130,38 +138,45 @@ export function EditAssetForm({ asset }: Props) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">Colour</label>
+          <Label className="mb-2 block">Colour</Label>
           <div className="flex flex-wrap gap-2">
-            {PRESET_COLORS.map(c => (
-              <button
+            {PRESET_COLORS.map((c) => (
+              <Button
                 key={c}
                 type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={`Select ${c} colour`}
                 onClick={() => setColor(c)}
                 className="h-7 w-7 rounded-full transition-transform hover:scale-110"
                 style={{
-                  background:     c,
-                  outline:        color === c ? `3px solid ${c}` : 'none',
-                  outlineOffset:  '2px',
+                  background: c,
+                  outline: color === c ? `3px solid ${c}` : 'none',
+                  outlineOffset: '2px',
                 }}
               />
             ))}
-            <input
+            <Input
+              id="color"
               type="color"
+              name="color"
               value={color}
-              onChange={e => setColor(e.target.value)}
-              className="h-7 w-7 cursor-pointer rounded-full border-0 bg-transparent p-0"
+              onChange={(e) => setColor(e.target.value)}
+              className="h-7 w-7 rounded-full border-0 bg-transparent p-0"
               title="Custom colour"
             />
           </div>
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Notes <span className="text-muted-foreground">(optional)</span></label>
-          <textarea
+          <Label htmlFor="notes" className="mb-1.5 block">
+            Notes <span className="text-muted-foreground">(optional)</span>
+          </Label>
+          <Textarea
+            id="notes"
             name="notes"
             rows={2}
             defaultValue={asset.notes ?? ''}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
           />
         </div>
       </div>
@@ -170,13 +185,9 @@ export function EditAssetForm({ asset }: Props) {
         <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">{error}</p>
       )}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
-      >
+      <Button type="submit" disabled={pending} className="w-full">
         {pending ? 'Saving…' : 'Save changes'}
-      </button>
+      </Button>
     </form>
   )
 }

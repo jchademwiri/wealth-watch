@@ -8,41 +8,44 @@ import { generatePortfolioInsight } from '@/actions/ai'
 import { formatZAR } from '@/lib/formatting'
 import { cn } from '@/lib/utils'
 import type { Asset } from '@/db/schema'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 interface Props {
-  assets:        Asset[]
-  lastValues:    Record<string, number>
-  defaultDate?:  string
+  assets: Asset[]
+  lastValues: Record<string, number>
+  defaultDate?: string
 }
 
 export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
-  const router   = useRouter()
+  const router = useRouter()
   const [pending, startTransition] = useTransition()
 
   const today = defaultDate ?? new Date().toISOString().split('T')[0]
-  const [date,   setDate]   = useState(today)
+  const [date, setDate] = useState(today)
   const [values, setValues] = useState<Record<string, string>>(() => {
     const init: Record<string, string> = {}
-    assets.forEach(a => {
+    assets.forEach((a) => {
       init[a.id] = lastValues[a.id]?.toFixed(2) ?? '0.00'
     })
     return init
   })
-  const [done,  setDone]  = useState(false)
+  const [done, setDone] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const totalValue = Object.values(values).reduce((s, v) => s + (parseFloat(v) || 0), 0)
 
   function handleChange(assetId: string, raw: string) {
-    setValues(prev => ({ ...prev, [assetId]: raw }))
+    setValues((prev) => ({ ...prev, [assetId]: raw }))
   }
 
   function handleSubmit() {
     setError(null)
     startTransition(async () => {
-      const entries = assets.map(a => ({
+      const entries = assets.map((a) => ({
         assetId: a.id,
-        value:   (parseFloat(values[a.id] ?? '0') || 0).toFixed(2),
+        value: (parseFloat(values[a.id] ?? '0') || 0).toFixed(2),
       }))
 
       const result = await saveBulkSnapshot(new Date(date + 'T12:00:00'), entries)
@@ -73,12 +76,14 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Snapshot date</label>
-        <input
+        <Label htmlFor="snapshot-date" className="mb-1.5 block">
+          Snapshot date
+        </Label>
+        <Input
+          id="snapshot-date"
           type="date"
           value={date}
-          onChange={e => setDate(e.target.value)}
-          className="rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          onChange={(e) => setDate(e.target.value)}
         />
       </div>
 
@@ -92,11 +97,11 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
           </p>
         </div>
         <div className="divide-y">
-          {assets.map(asset => {
-            const last    = lastValues[asset.id] ?? 0
+          {assets.map((asset) => {
+            const last = lastValues[asset.id] ?? 0
             const current = parseFloat(values[asset.id] ?? '0') || 0
-            const diff    = current - last
-            const pct     = last > 0 ? (diff / last) * 100 : 0
+            const diff = current - last
+            const pct = last > 0 ? (diff / last) * 100 : 0
 
             return (
               <div key={asset.id} className="flex items-center gap-3 px-4 py-3">
@@ -113,23 +118,28 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
                 <div className="text-right">
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm text-muted-foreground">R</span>
-                    <input
+                    <Input
                       type="number"
                       step="0.01"
                       min="0"
                       value={values[asset.id] ?? ''}
-                      onChange={e => handleChange(asset.id, e.target.value)}
-                      className="w-28 rounded border bg-background px-2 py-1 text-right font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      onChange={(e) => handleChange(asset.id, e.target.value)}
+                      className="w-28 text-right font-mono"
                     />
                   </div>
                   {last > 0 && (
-                    <p className={cn(
-                      'mt-0.5 text-right text-xs',
-                      diff > 0  ? 'text-emerald-600 dark:text-emerald-400' :
-                      diff < 0  ? 'text-red-500 dark:text-red-400' :
-                      'text-muted-foreground'
-                    )}>
-                      {diff >= 0 ? '+' : ''}{pct.toFixed(1)}% vs last
+                    <p
+                      className={cn(
+                        'mt-0.5 text-right text-xs',
+                        diff > 0
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : diff < 0
+                          ? 'text-red-500 dark:text-red-400'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      {diff >= 0 ? '+' : ''}
+                      {pct.toFixed(1)}% vs last
                     </p>
                   )}
                 </div>
@@ -149,10 +159,10 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
         </p>
       )}
 
-      <button
+      <Button
         onClick={handleSubmit}
         disabled={pending}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2"
       >
         {pending ? (
           <>
@@ -162,7 +172,7 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
         ) : (
           'Save snapshot'
         )}
-      </button>
+      </Button>
       <p className="text-center text-xs text-muted-foreground">
         An AI insight will be generated automatically after saving.
       </p>
