@@ -1,6 +1,7 @@
 import { Archive, Plus } from "lucide-react";
 import Link from "next/link";
 import { getAssets } from "@/actions/assets";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -72,15 +73,12 @@ export default async function AssetsPage() {
 
       <Card className="overflow-hidden bg-card/90">
         {active.length === 0 && (
-          <CardContent className="p-10 text-center">
-            <p className="text-muted-foreground">No assets yet.</p>
-            <Link
-              href="/dashboard/assets/new"
-              className="mt-2 inline-block text-sm text-primary hover:underline"
-            >
-              Add your first asset →
-            </Link>
-          </CardContent>
+          <EmptyState
+            title="No assets yet."
+            actionHref="/dashboard/assets/new"
+            actionLabel="Add your first asset →"
+            className="border-0 shadow-none"
+          />
         )}
         <div className="divide-y divide-border/70">
           {active.map((asset) => (

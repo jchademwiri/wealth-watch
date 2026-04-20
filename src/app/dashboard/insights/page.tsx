@@ -1,12 +1,13 @@
-import { getAllInsights } from '@/actions/ai'
-import { formatDate } from '@/lib/formatting'
-import ReactMarkdown from 'react-markdown'
-import { Sparkles } from 'lucide-react'
+import { Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { getAllInsights } from "@/actions/ai";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { formatDate } from "@/lib/formatting";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function InsightsPage() {
-  const insights = await getAllInsights()
+  const insights = await getAllInsights();
 
   return (
     <div className="p-4 md:p-6">
@@ -18,20 +19,20 @@ export default async function InsightsPage() {
       </div>
 
       {insights.length === 0 ? (
-        <div className="rounded-lg border bg-card p-8 text-center">
-          <Sparkles className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
-          <p className="text-muted-foreground">No insights yet.</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Save a snapshot or click Refresh on the dashboard to generate your first insight.
-          </p>
-        </div>
+        <EmptyState
+          icon={Sparkles}
+          title="AI insights are coming soon."
+          description="We are still fixing the AI key and quota setup before turning this section back on."
+        />
       ) : (
         <div className="space-y-4">
-          {insights.map(insight => (
+          {insights.map((insight) => (
             <div key={insight.id} className="rounded-lg border bg-card p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-violet-500" />
-                <span className="text-sm font-medium">{formatDate(insight.createdAt)}</span>
+                <span className="text-sm font-medium">
+                  {formatDate(insight.createdAt)}
+                </span>
                 <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
                   {insight.model}
                 </span>
@@ -44,5 +45,5 @@ export default async function InsightsPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

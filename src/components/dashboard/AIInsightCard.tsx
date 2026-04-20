@@ -1,12 +1,12 @@
 "use client";
 
-import { RefreshCw, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { type AiInsightError, generatePortfolioInsight } from "@/actions/ai";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import type { AiInsight } from "@/db/schema";
 import { formatDate } from "@/lib/formatting";
-import { cn } from "@/lib/utils";
 import { AIInsightErrorState } from "./AIInsightErrorState";
 
 interface Props {
@@ -97,15 +97,6 @@ export function AIInsightCard({ initialInsight }: Props) {
             AI portfolio insight
           </h3>
         </div>
-        <button
-          type="button"
-          onClick={handleRefresh}
-          disabled={loading}
-          className="flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
-        >
-          <RefreshCw className={cn("h-3 w-3", loading && "animate-spin")} />
-          {loading ? "Analysing…" : "Refresh"}
-        </button>
       </div>
 
       {error && (
@@ -120,18 +111,12 @@ export function AIInsightCard({ initialInsight }: Props) {
       )}
 
       {!insight && !loading && !error && (
-        <div className="rounded-md bg-muted/50 p-4 text-center">
-          <p className="text-sm text-muted-foreground">
-            No insight generated yet.
-          </p>
-          <button
-            type="button"
-            onClick={handleRefresh}
-            className="mt-2 text-sm font-medium text-violet-600 hover:underline dark:text-violet-400"
-          >
-            Generate your first insight →
-          </button>
-        </div>
+        <EmptyState
+          badge="Coming soon"
+          title="AI insights are temporarily on hold."
+          description="This section will be enabled again once the AI key and quota are sorted out."
+          className="border-dashed bg-muted/40 shadow-none"
+        />
       )}
 
       {loading && (
