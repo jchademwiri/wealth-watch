@@ -1,20 +1,32 @@
-'use client'
+"use client";
 
-import { useTransition } from 'react'
-import { toggleAssetActive } from '@/actions/assets'
+import { useTransition } from "react";
+import { toggleAssetActive } from "@/actions/assets";
+import { Button } from "@/components/ui/button";
 
-export function ToggleAssetButton({ id, isActive }: { id: string; isActive: boolean }) {
-  const [pending, startTransition] = useTransition()
+export function ToggleAssetButton({
+  id,
+  isActive,
+}: {
+  id: string;
+  isActive: boolean;
+}) {
+  const [pending, startTransition] = useTransition();
 
   return (
-    <button
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
       disabled={pending}
-      onClick={() => startTransition(() => {
-        void toggleAssetActive(id)
-      })}
-      className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+      onClick={() =>
+        startTransition(() => {
+          void toggleAssetActive(id);
+        })
+      }
+      className="rounded-lg text-muted-foreground"
     >
-      {pending ? '…' : isActive ? 'Archive' : 'Restore'}
-    </button>
-  )
+      {pending ? "…" : isActive ? "Archive" : "Restore"}
+    </Button>
+  );
 }

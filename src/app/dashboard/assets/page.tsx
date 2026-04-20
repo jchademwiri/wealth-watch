@@ -1,79 +1,118 @@
-import Link from 'next/link'
-import { Plus, Archive } from 'lucide-react'
-import { getAssets } from '@/actions/assets'
-import { ToggleAssetButton } from './ToggleAssetButton'
+import { Archive, Plus } from "lucide-react";
+import Link from "next/link";
+import { getAssets } from "@/actions/assets";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { ToggleAssetButton } from "./ToggleAssetButton";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 const TYPE_LABELS: Record<string, string> = {
-  etf:        'ETF',
-  stock:      'Stock',
-  crypto:     'Crypto',
-  unit_trust: 'Unit Trust',
-  cash:       'Cash',
-  bond:       'Bond',
-  reit:       'REIT',
-  other:      'Other',
-}
+  etf: "ETF",
+  stock: "Stock",
+  crypto: "Crypto",
+  unit_trust: "Unit Trust",
+  cash: "Cash",
+  bond: "Bond",
+  reit: "REIT",
+  other: "Other",
+};
 
 const BROKER_LABELS: Record<string, string> = {
-  easy_equities:  'EasyEquities',
-  luno:           'Luno',
-  satrix:         'Satrix',
-  allan_gray:     'Allan Gray',
-  tfg:            'TFG',
-  absa:           'ABSA',
-  fnb:            'FNB',
-  nedbank:        'Nedbank',
-  standard_bank:  'Standard Bank',
-  other:          'Other',
-}
+  easy_equities: "EasyEquities",
+  luno: "Luno",
+  satrix: "Satrix",
+  allan_gray: "Allan Gray",
+  tfg: "TFG",
+  absa: "ABSA",
+  fnb: "FNB",
+  nedbank: "Nedbank",
+  standard_bank: "Standard Bank",
+  other: "Other",
+};
 
 export default async function AssetsPage() {
-  const assets = await getAssets()
-  const active   = assets.filter(a => a.isActive)
-  const archived = assets.filter(a => !a.isActive)
+  const assets = await getAssets();
+  const active = assets.filter((a) => a.isActive);
+  const archived = assets.filter((a) => !a.isActive);
 
   return (
     <div className="p-4 md:p-6">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">Assets</h1>
-          <p className="text-sm text-muted-foreground">{active.length} active · {archived.length} archived</p>
+          <p className="text-xs font-medium uppercase tracking-[0.24em] text-primary/70">
+            Portfolio setup
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+            Assets
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {active.length} active · {archived.length} archived
+          </p>
         </div>
         <Link
           href="/dashboard/assets/new"
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className={cn(
+            buttonVariants({ size: "lg" }),
+            "rounded-xl px-4 shadow-sm hover:-translate-y-0.5 hover:shadow-md",
+          )}
         >
           <Plus className="h-4 w-4" />
           Add asset
         </Link>
       </div>
 
-      <div className="rounded-lg border bg-card">
+      <Card className="overflow-hidden bg-card/90">
         {active.length === 0 && (
-          <div className="p-8 text-center">
+          <CardContent className="p-10 text-center">
             <p className="text-muted-foreground">No assets yet.</p>
-            <Link href="/dashboard/assets/new" className="mt-2 inline-block text-sm text-primary hover:underline">
+            <Link
+              href="/dashboard/assets/new"
+              className="mt-2 inline-block text-sm text-primary hover:underline"
+            >
               Add your first asset →
             </Link>
-          </div>
+          </CardContent>
         )}
-        <div className="divide-y">
-          {active.map(asset => (
-            <div key={asset.id} className="flex items-center gap-3 px-4 py-3">
-              <span className="h-3 w-3 flex-shrink-0 rounded-full" style={{ background: asset.color }} />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{asset.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {TYPE_LABELS[asset.type]} · {BROKER_LABELS[asset.broker]}
-                  {asset.ticker && ` · ${asset.ticker}`}
+        <div className="divide-y divide-border/70">
+          {active.map((asset) => (
+            <div
+              key={asset.id}
+              className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/35"
+            >
+              <span
+                className="h-3.5 w-3.5 flex-shrink-0 rounded-full shadow-[0_0_0_5px_color-mix(in_oklch,var(--color-muted)_82%,transparent)]"
+                style={{ background: asset.color }}
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="truncate text-lg font-medium tracking-tight text-foreground">
+                    {asset.name}
+                  </p>
+                  <Badge variant="secondary">{TYPE_LABELS[asset.type]}</Badge>
+                  {asset.ticker && (
+                    <Badge variant="outline">{asset.ticker}</Badge>
+                  )}
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Held with {BROKER_LABELS[asset.broker]}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 opacity-80 transition-opacity group-hover:opacity-100">
                 <Link
                   href={`/dashboard/assets/${asset.id}`}
-                  className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors"
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    "rounded-lg text-muted-foreground",
+                  )}
                 >
                   Edit
                 </Link>
@@ -82,30 +121,50 @@ export default async function AssetsPage() {
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {archived.length > 0 && (
-        <div className="mt-6">
-          <div className="mb-3 flex items-center gap-2">
-            <Archive className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-sm font-medium text-muted-foreground">Archived</h2>
-          </div>
-          <div className="rounded-lg border bg-card opacity-60">
-            <div className="divide-y">
-              {archived.map(asset => (
-                <div key={asset.id} className="flex items-center gap-3 px-4 py-3">
-                  <span className="h-3 w-3 flex-shrink-0 rounded-full" style={{ background: asset.color }} />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{asset.name}</p>
-                    <p className="text-xs text-muted-foreground">{TYPE_LABELS[asset.type]} · {BROKER_LABELS[asset.broker]}</p>
+        <div className="mt-8">
+          <Card className="overflow-hidden border-dashed bg-card/70">
+            <CardHeader className="flex-row items-center justify-between gap-3 border-b border-border/60 bg-muted/20">
+              <div className="flex items-center gap-2">
+                <Archive className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm">Archived assets</CardTitle>
+              </div>
+              <CardDescription>
+                {archived.length} kept for history
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="divide-y divide-border/60">
+                {archived.map((asset) => (
+                  <div
+                    key={asset.id}
+                    className="flex items-center gap-4 px-5 py-4"
+                  >
+                    <span
+                      className="h-3.5 w-3.5 flex-shrink-0 rounded-full"
+                      style={{ background: asset.color }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{asset.name}</p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary">
+                          {TYPE_LABELS[asset.type]}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">
+                          {BROKER_LABELS[asset.broker]}
+                        </span>
+                      </div>
+                    </div>
+                    <ToggleAssetButton id={asset.id} isActive={false} />
                   </div>
-                  <ToggleAssetButton id={asset.id} isActive={false} />
-                </div>
-              ))}
-            </div>
-          </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>
-  )
+  );
 }
