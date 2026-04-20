@@ -1,7 +1,7 @@
 "use client";
 
 import { RefreshCw, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { type AiInsightError, generatePortfolioInsight } from "@/actions/ai";
 import type { AiInsight } from "@/db/schema";
@@ -13,20 +13,35 @@ interface Props {
   initialInsight: AiInsight | null;
 }
 
+function parseRetryAfterSeconds(value?: string) {
+  if (!value) {
+    return null;
+  }
+
+  const seconds = Number.parseInt(value.replace(/\D/g, ""), 10);
+  if (Number.isNaN(seconds) || seconds < 0) {
+    return null;
+  }
+
+  return seconds;
+}
+
 export function AIInsightCard({ initialInsight }: Props) {
   const [insight, setInsight] = useState<AiInsight | null>(initialInsight);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AiInsightError | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
+  const [countdownSeconds, setCountdownSeconds] = useState<number | null>(null);
+  const [autoRetryEnabled, setAutoRetryEnabled] = useState(true);
 
   async function handleRefresh() {
     setLoading(true);
     setError(null);
-    setShowDetails(false);
+    setCountdownSeconds(null);
 
     const result = await generatePortfolioInsight();
     if (result.error) {
       setError(result.error);
+      setCountdownSeconds(parseRetryAfterSeconds(result.error.retryAfter));
     } else if (result.data) {
       setInsight({
         id: "temp",
@@ -36,10 +51,42 @@ export function AIInsightCard({ initialInsight }: Props) {
         model: "claude-sonnet-4-20250514",
         createdAt: new Date(),
       });
+      setCountdownSeconds(null);
     }
 
     setLoading(false);
   }
+
+  useEffect(() => {
+    if (
+      !autoRetryEnabled ||
+      countdownSeconds === null ||
+      countdownSeconds <= 0 ||
+      loading
+    ) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setCountdownSeconds((current) =>
+        current === null ? null : Math.max(current - 1, 0),
+      );
+    }, 1000);
+
+    return () => window.clearTimeout(timeout);
+  }, [autoRetryEnabled, countdownSeconds, loading]);
+
+  const triggerAutoRetry = useEffectEvent(() => {
+    void handleRefresh();
+  });
+
+  useEffect(() => {
+    if (!autoRetryEnabled || !error || loading || countdownSeconds !== 0) {
+      return;
+    }
+
+    triggerAutoRetry();
+  }, [autoRetryEnabled, countdownSeconds, error, loading, triggerAutoRetry]);
 
   return (
     <div className="rounded-lg border bg-card p-4">
@@ -64,8 +111,11 @@ export function AIInsightCard({ initialInsight }: Props) {
       {error && (
         <AIInsightErrorState
           error={error}
-          showDetails={showDetails}
-          onToggleDetails={() => setShowDetails((current) => !current)}
+          loading={loading}
+          countdownSeconds={countdownSeconds}
+          autoRetryEnabled={autoRetryEnabled}
+          onAutoRetryChange={setAutoRetryEnabled}
+          onRetry={() => void handleRefresh()}
         />
       )}
 

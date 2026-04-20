@@ -23,7 +23,6 @@ export interface AiInsightError {
   statusCode?: number;
   retryAfter?: string;
   details?: string[];
-  technicalDetails?: string;
 }
 
 async function generateGeminiText(
@@ -205,22 +204,6 @@ function extractErrorJson(message: string): unknown {
   }
 }
 
-function getTechnicalDetails(
-  message: string,
-  parsedJson?: unknown,
-): string | undefined {
-  if (parsedJson) {
-    return JSON.stringify(parsedJson, null, 2);
-  }
-
-  const jsonStart = message.indexOf("{");
-  if (jsonStart === -1) {
-    return undefined;
-  }
-
-  return message.slice(jsonStart).trim();
-}
-
 function formatAiError(error: unknown): AiInsightError {
   const message = error instanceof Error ? error.message : String(error);
   const parsed = extractErrorJson(message) as
@@ -275,7 +258,6 @@ function formatAiError(error: unknown): AiInsightError {
       details: quotaViolations?.length
         ? Array.from(new Set(quotaViolations))
         : ["Request quota is unavailable for the configured Gemini model."],
-      technicalDetails: getTechnicalDetails(message, parsed),
     };
   }
 
@@ -285,7 +267,6 @@ function formatAiError(error: unknown): AiInsightError {
       message: "No Gemini API key is configured for this app.",
       suggestion:
         "Set `GEMINI_API_KEY` or `GOOGLE_API_KEY` in `.env.local`, then restart the app.",
-      technicalDetails: message,
     };
   }
 
@@ -295,7 +276,6 @@ function formatAiError(error: unknown): AiInsightError {
       message: "Gemini completed the request but did not return any text.",
       suggestion:
         "Try refreshing again. If it keeps happening, reduce prompt size or inspect the provider response.",
-      technicalDetails: message,
     };
   }
 
@@ -304,7 +284,6 @@ function formatAiError(error: unknown): AiInsightError {
     message: "The portfolio insight could not be generated right now.",
     suggestion:
       "Check the API key, quota, and provider response, then try again.",
-    technicalDetails: getTechnicalDetails(message, parsed) ?? message,
   };
 }
 
