@@ -332,7 +332,6 @@ export async function getLatestInsight() {
   try {
     const insight = await db.query.aiInsights.findFirst({
       orderBy: desc(aiInsights.createdAt),
-      limit: 1,
     });
     return insight ?? null;
   } catch (error) {
