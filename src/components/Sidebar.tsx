@@ -30,8 +30,8 @@ export function Sidebar() {
     <aside className="flex h-screen w-64 flex-col border-r border-sidebar-border/70 bg-sidebar/80 backdrop-blur">
       <div className="px-6 pb-4 pt-6">
         <div className="flex items-center gap-3 px-2">
-          <div className="flex h-11 w-11 items-center justify-center rounded-md bg-linear-to-br from-primary/20 via-primary/10 to-transparent ring-1 ring-primary/10">
-            <div className="h-5 w-5 rounded-md bg-primary/80 shadow-sm" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-linear-to-br from-primary/20 via-primary/10 to-transparent ring-1 ring-primary/10">
+            <div className="h-5 w-5 rounded-sm bg-primary/80 shadow-sm" />
           </div>
           <div className="min-w-0">
             <p className="text-base font-semibold tracking-tight text-sidebar-foreground">
@@ -58,7 +58,7 @@ export function Sidebar() {
                   variant: active ? "secondary" : "ghost",
                   size: "lg",
                 }),
-                "h-auto w-full justify-start gap-3 rounded-md px-4 py-3 text-sm transition-all",
+                "h-auto w-full justify-start gap-3 rounded-sm px-4 py-3 text-sm transition-all",
                 active
                   ? "bg-primary/12 font-medium text-primary shadow-sm ring-1 ring-primary/10"
                   : "text-muted-foreground hover:bg-background/80 hover:text-foreground",
@@ -66,7 +66,7 @@ export function Sidebar() {
             >
               <span
                 className={cn(
-                  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors",
+                  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm transition-colors",
                   active
                     ? "bg-primary/12 text-primary"
                     : "bg-background/70 text-muted-foreground",
@@ -80,7 +80,7 @@ export function Sidebar() {
         })}
       </nav>
       <div className="px-5 pb-5 pt-3">
-        <Card className="rounded-md border-sidebar-border/60 bg-background/70 shadow-none">
+        <Card className="rounded-sm border-sidebar-border/60 bg-background/70 shadow-none">
           <CardContent className="px-4 py-3">
             <p className="text-xs text-muted-foreground">
               v0.1.0 · open source

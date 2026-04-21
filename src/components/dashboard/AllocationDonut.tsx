@@ -25,7 +25,7 @@ export function AllocationDonut({ assets }: Props) {
     if (!active || !payload?.length) return null;
     const d = payload[0];
     return (
-      <div className="rounded-md border bg-background p-3 text-sm shadow-md">
+      <div className="rounded-sm border bg-background p-3 text-sm shadow-md">
         <p className="font-medium">{d.name}</p>
         <p className="font-mono text-foreground">{formatZAR(d.value)}</p>
         <p className="text-xs text-muted-foreground">
@@ -38,7 +38,7 @@ export function AllocationDonut({ assets }: Props) {
   const hasAllocation = data.length > 0;
 
   return (
-    <div className="flex h-full flex-col rounded-md border bg-card p-4">
+    <div className="flex h-full flex-col rounded-sm border bg-card p-4">
       <h3 className="mb-4 text-sm font-medium text-muted-foreground">
         Current allocation
       </h3>
@@ -83,7 +83,7 @@ export function AllocationDonut({ assets }: Props) {
           </div>
         </>
       ) : (
-        <div className="flex h-[260px] flex-col items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
+        <div className="flex h-[260px] flex-col items-center justify-center rounded-sm border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
           <p className="font-medium text-foreground">
             No allocation available yet.
           </p>

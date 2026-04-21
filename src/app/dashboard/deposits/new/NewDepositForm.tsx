@@ -49,7 +49,7 @@ export function NewDepositForm({ assets }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-md border bg-card p-4 space-y-4">
+      <div className="rounded-sm border bg-card p-4 space-y-4">
         <div>
           <Label className="mb-1.5 block">
             Asset <span className="text-red-500">*</span>
@@ -115,7 +115,7 @@ export function NewDepositForm({ assets }: Props) {
       </div>
 
       {error && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+        <p className="rounded-sm bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
           {error}
         </p>
       )}

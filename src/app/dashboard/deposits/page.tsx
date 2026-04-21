@@ -36,14 +36,14 @@ export default async function DepositsPage() {
         </div>
         <Link
           href="/dashboard/deposits/new"
-          className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 rounded-sm bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
         >
           <Plus className="h-4 w-4" />
           Log deposit
         </Link>
       </div>
 
-      <div className="rounded-md border bg-card">
+      <div className="rounded-sm border bg-card">
         {deposits.length === 0 ? (
           <EmptyState
             title="No deposits yet."

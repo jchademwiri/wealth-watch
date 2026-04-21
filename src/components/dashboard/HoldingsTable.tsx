@@ -25,7 +25,7 @@ export function HoldingsTable({ assets, totalValue, totalDeposited }: Props) {
       : 0;
 
   return (
-    <div className="rounded-md border bg-card">
+    <div className="rounded-sm border bg-card">
       <div className="border-b p-4">
         <h3 className="text-sm font-medium text-muted-foreground">
           Holdings breakdown

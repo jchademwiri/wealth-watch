@@ -95,7 +95,7 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
         />
       </div>
 
-      <div className="rounded-md border bg-card">
+      <div className="rounded-sm border bg-card">
         <div className="border-b px-4 py-3">
           <p className="text-sm font-medium text-muted-foreground">
             Enter current value for each asset
@@ -167,7 +167,7 @@ export function BulkSnapshotForm({ assets, lastValues, defaultDate }: Props) {
       </div>
 
       {error && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+        <p className="rounded-sm bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
           {error}
         </p>
       )}

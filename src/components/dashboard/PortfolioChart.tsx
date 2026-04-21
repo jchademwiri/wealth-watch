@@ -37,7 +37,7 @@ export function PortfolioChart({ snapshots }: Props) {
     const val = payload.find((p: any) => p.dataKey === "value")?.value ?? 0;
     const diff = val - dep;
     return (
-      <div className="rounded-md border bg-background p-3 text-sm shadow-md">
+      <div className="rounded-sm border bg-background p-3 text-sm shadow-md">
         <p className="mb-2 font-medium">{label}</p>
         <p className="text-muted-foreground">
           Deposited:{" "}
@@ -60,7 +60,7 @@ export function PortfolioChart({ snapshots }: Props) {
   const hasData = data.length > 0;
 
   return (
-    <div className="h-full rounded-md border bg-card p-4">
+    <div className="h-full rounded-sm border bg-card p-4">
       <h3 className="mb-4 text-sm font-medium text-muted-foreground">
         Deposited vs portfolio value
       </h3>
@@ -126,7 +126,7 @@ export function PortfolioChart({ snapshots }: Props) {
           </ResponsiveContainer>
         </>
       ) : (
-        <div className="flex h-[260px] items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
+        <div className="flex h-[260px] items-center justify-center rounded-sm border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
           <div>
             <p className="font-medium text-foreground">
               No portfolio snapshots available.

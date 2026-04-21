@@ -63,7 +63,7 @@ export default async function AssetsPage() {
           href="/dashboard/assets/new"
           className={cn(
             buttonVariants({ size: "lg" }),
-            "rounded-md px-4 shadow-sm hover:-translate-y-0.5 hover:shadow-md",
+            "rounded-sm px-4 shadow-sm hover:-translate-y-0.5 hover:shadow-md",
           )}
         >
           <Plus className="h-4 w-4" />
@@ -109,7 +109,7 @@ export default async function AssetsPage() {
                   href={`/dashboard/assets/${asset.id}`}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "sm" }),
-                    "rounded-md text-muted-foreground",
+                    "rounded-sm text-muted-foreground",
                   )}
                 >
                   Edit

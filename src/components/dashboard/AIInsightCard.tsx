@@ -89,7 +89,7 @@ export function AIInsightCard({ initialInsight }: Props) {
   }, [autoRetryEnabled, countdownSeconds, error, loading, triggerAutoRetry]);
 
   return (
-    <div className="rounded-md border bg-card p-4">
+    <div className="rounded-sm border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-violet-500" />
@@ -100,7 +100,7 @@ export function AIInsightCard({ initialInsight }: Props) {
         <button
           onClick={() => void handleRefresh()}
           disabled={loading}
-          className="flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-xs text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+          className="flex items-center gap-1 rounded-sm bg-primary px-2.5 py-1 text-xs text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
         >
           <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`} />
           {loading ? "Generating..." : "Generate"}

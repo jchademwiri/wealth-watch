@@ -42,7 +42,7 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/dashboard/snapshots/new"
-          className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 rounded-sm bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
         >
           <Camera className="h-4 w-4" />
           Record snapshot
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
       </div>
 
       {needsUpdate && (
-        <div className="flex items-center justify-between rounded-md border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/30">
+        <div className="flex items-center justify-between rounded-sm border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-900 dark:bg-amber-950/30">
           <p className="text-sm text-amber-800 dark:text-amber-300">
             {daysSinceSnap === null
               ? "No snapshots yet — add your first portfolio update."
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
       <AIInsightCard initialInsight={latestInsight} />
 
       {/* Recent Deposits */}
-      <div className="rounded-md border bg-card p-4">
+      <div className="rounded-sm border bg-card p-4">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-sm font-medium text-muted-foreground">
             Recent deposits

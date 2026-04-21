@@ -27,7 +27,7 @@ export default async function InsightsPage() {
       ) : (
         <div className="space-y-4">
           {insights.map((insight) => (
-            <div key={insight.id} className="rounded-md border bg-card p-5">
+            <div key={insight.id} className="rounded-sm border bg-card p-5">
               <div className="mb-3 flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-violet-500" />
                 <span className="text-sm font-medium">

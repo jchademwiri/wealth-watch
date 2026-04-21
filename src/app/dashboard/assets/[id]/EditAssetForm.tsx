@@ -89,7 +89,7 @@ export function EditAssetForm({ asset }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-md border bg-card p-4 space-y-4">
+      <div className="rounded-sm border bg-card p-4 space-y-4">
         <div>
           <Label htmlFor="name" className="mb-1.5 block">
             Asset name <span className="text-red-500">*</span>
@@ -149,7 +149,7 @@ export function EditAssetForm({ asset }: Props) {
                 size="icon"
                 aria-label={`Select ${c} colour`}
                 onClick={() => setColor(c)}
-                className="h-7 w-7 rounded-md transition-transform hover:scale-110"
+                className="h-7 w-7 rounded-sm transition-transform hover:scale-110"
                 style={{
                   background: c,
                   outline: color === c ? `3px solid ${c}` : "none",
@@ -163,7 +163,7 @@ export function EditAssetForm({ asset }: Props) {
               name="color"
               value={color}
               onChange={(e) => setColor(e.target.value)}
-              className="h-7 w-7 rounded-md border-0 bg-transparent p-0"
+              className="h-7 w-7 rounded-sm border-0 bg-transparent p-0"
               title="Custom colour"
             />
           </div>
@@ -183,7 +183,7 @@ export function EditAssetForm({ asset }: Props) {
       </div>
 
       {error && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+        <p className="rounded-sm bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
           {error}
         </p>
       )}

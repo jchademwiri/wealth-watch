@@ -86,7 +86,7 @@ function MetricCard({
 }: MetricCardProps) {
   const colored = valueRaw !== undefined;
   return (
-    <div className="rounded-md bg-muted/50 p-4">
+    <div className="rounded-sm bg-muted/50 p-4">
       <div className="mb-2 flex items-center gap-1.5 text-muted-foreground">
         {icon}
         <span className="text-xs uppercase tracking-wide">{label}</span>
