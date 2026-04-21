@@ -48,15 +48,7 @@ export function SettingsForm({ initialSettings }: Props) {
         </Section>
 
         <Section title="Display">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="block">Theme</Label>
-              <p className="text-sm text-muted-foreground">
-                Toggle between dark and light mode
-              </p>
-            </div>
-            <ThemeToggle />
-          </div>
+         
           <div>
             <Label className="mb-1.5 block">Currency symbol</Label>
             <Select
@@ -92,62 +84,22 @@ export function SettingsForm({ initialSettings }: Props) {
             placeholder="you@email.com"
             disabled={pending}
           />
-          <div>
-            <Label className="mb-1.5 block">Frequency</Label>
-            <Select
-              name="reminderFrequency"
-              defaultValue={s?.reminderFrequency ?? "weekly"}
-              disabled={pending}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select frequency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="weekly">Weekly (recommended)</SelectItem>
-                <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                <SelectItem value="monthly">Monthly</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-200">
+            <strong>Note:</strong> Reminders are sent every Monday at 08:00
+            SAST. The frequency/time settings below are stored for future use.
           </div>
-          <div>
-            <Label className="mb-1.5 block">Day of week</Label>
-            <Select
-              name="reminderDay"
-              defaultValue={s?.reminderDay ?? "monday"}
-              disabled={pending}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select day" />
-              </SelectTrigger>
-              <SelectContent>
-                {[
-                  "monday",
-                  "tuesday",
-                  "wednesday",
-                  "thursday",
-                  "friday",
-                  "saturday",
-                  "sunday",
-                ].map((d) => (
-                  <SelectItem key={d} value={d}>
-                    {d.charAt(0).toUpperCase() + d.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        </Section>
+
+        <Section title="Appearance">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="block">Theme</Label>
+              <p className="text-sm text-muted-foreground">
+                Toggle between dark and light mode
+              </p>
+            </div>
+            <ThemeToggle />
           </div>
-          <Field
-            label="Time (SAST)"
-            name="reminderTime"
-            type="time"
-            defaultValue={s?.reminderTime ?? "08:00"}
-            disabled={pending}
-          />
-          <p className="text-xs text-muted-foreground">
-            The cron job runs at 08:00 SAST (06:00 UTC) every Monday by default.
-            To change frequency, update{" "}
-            <code className="font-mono">vercel.json</code>.
-          </p>
         </Section>
       </div>
     </form>

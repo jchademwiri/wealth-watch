@@ -1,4 +1,5 @@
 {
+  "$comment": "Runs every Monday at 06:00 UTC (08:00 SAST). Update schedule here to change.",
   "crons": [
     {
       "path": "/api/cron/portfolio-reminder",
