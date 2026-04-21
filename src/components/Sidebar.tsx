@@ -37,10 +37,9 @@ export function Sidebar() {
             <p className="text-base font-semibold tracking-tight text-sidebar-foreground">
               WealthWatch
             </p>
-            <p className="mt-0.5 text-xs text-muted-foreground italic">
-              v0.1.0
-              {/* · open source */}
-            </p>
+            <span className="mt-0.5 inline-flex items-center gap-1 rounded-sm bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+              ALPHA v0.1.0
+            </span>
           </div>
         </div>
       </div>
@@ -82,9 +81,8 @@ export function Sidebar() {
       <div className="px-5 pb-5 pt-3">
         <Card className="rounded-sm border-sidebar-border/60 bg-background/70 shadow-none">
           <CardContent className="px-4 py-3">
-            <p className="text-xs text-muted-foreground">
-              v0.1.0 · open source
-            </p>
+            {/* TODO: Replace with authenticated user details when auth is added */}
+            <p className="text-xs text-muted-foreground">Not signed in</p>
           </CardContent>
         </Card>
       </div>
