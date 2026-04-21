@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -33,13 +34,16 @@ export function Sidebar() {
           <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-linear-to-br from-primary/20 via-primary/10 to-transparent ring-1 ring-primary/10">
             <div className="h-5 w-5 rounded-sm bg-primary/80 shadow-sm" />
           </div>
-          <div className="min-w-0">
-            <p className="text-base font-semibold tracking-tight text-sidebar-foreground">
-              WealthWatch
-            </p>
-            <span className="mt-0.5 inline-flex items-center gap-1 rounded-sm bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-              ALPHA v0.1.0
-            </span>
+          <div className="flex min-w-0 flex-1 items-center justify-between">
+            <div>
+              <p className="text-base font-semibold tracking-tight text-sidebar-foreground">
+                WealthWatch
+              </p>
+              <span className="mt-0.5 inline-flex items-center gap-1 rounded-sm bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                ALPHA v0.1.0
+              </span>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface Props {
   initialSettings: UserSettings | null;
@@ -47,6 +48,15 @@ export function SettingsForm({ initialSettings }: Props) {
         </Section>
 
         <Section title="Display">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="block">Theme</Label>
+              <p className="text-sm text-muted-foreground">
+                Toggle between dark and light mode
+              </p>
+            </div>
+            <ThemeToggle />
+          </div>
           <div>
             <Label className="mb-1.5 block">Currency symbol</Label>
             <Select
