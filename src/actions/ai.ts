@@ -332,6 +332,7 @@ export async function getLatestInsight() {
   try {
     const insight = await db.query.aiInsights.findFirst({
       orderBy: desc(aiInsights.createdAt),
+      limit: 1,
     });
     return insight ?? null;
   } catch (error) {
@@ -344,6 +345,7 @@ export async function getAllInsights() {
   try {
     return await db.query.aiInsights.findMany({
       orderBy: desc(aiInsights.createdAt),
+      limit: 100,
     });
   } catch (error) {
     console.error("Failed to load all insights:", error);
