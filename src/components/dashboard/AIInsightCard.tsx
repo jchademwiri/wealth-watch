@@ -89,7 +89,7 @@ export function AIInsightCard({ initialInsight }: Props) {
   }, [autoRetryEnabled, countdownSeconds, error, loading, triggerAutoRetry]);
 
   return (
-    <div className="rounded-lg border bg-card p-4">
+    <div className="rounded-md border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-violet-500" />

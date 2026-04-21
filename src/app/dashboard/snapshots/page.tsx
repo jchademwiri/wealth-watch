@@ -1,9 +1,9 @@
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { getPortfolioSnapshots } from '@/actions/snapshots'
-import { EmptyState } from '@/components/dashboard/EmptyState'
-import { formatDate, formatPct, formatZAR } from '@/lib/formatting'
-import { cn } from '@/lib/utils'
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { getPortfolioSnapshots } from "@/actions/snapshots";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { formatDate, formatPct, formatZAR } from "@/lib/formatting";
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -11,12 +11,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function SnapshotsPage() {
-  const snapshots = await getPortfolioSnapshots()
+  const snapshots = await getPortfolioSnapshots();
 
   return (
     <div className="p-4 md:p-6">
@@ -29,7 +29,7 @@ export default async function SnapshotsPage() {
         </div>
         <Link
           href="/dashboard/snapshots/new"
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
         >
           <Plus className="h-4 w-4" />
           New snapshot
@@ -43,7 +43,7 @@ export default async function SnapshotsPage() {
           actionLabel="Create your first snapshot →"
         />
       ) : (
-        <div className="rounded-lg border bg-card overflow-hidden">
+        <div className="rounded-md border bg-card overflow-hidden">
           <div className="overflow-x-auto">
             <Table className="w-full text-sm">
               <TableHeader>
@@ -67,20 +67,25 @@ export default async function SnapshotsPage() {
               </TableHeader>
               <TableBody>
                 {snapshots.map((snap, idx) => {
-                  const totalValue = parseFloat(snap.totalValue)
-                  const totalDeposited = parseFloat(snap.totalDeposited)
-                  const pnl = parseFloat(snap.pnl)
-                  const pnlPct = parseFloat(snap.pnlPct)
-                  const olderSnap = idx < snapshots.length - 1 ? snapshots[idx + 1] : null
-                  const prevValue = olderSnap ? parseFloat(olderSnap.totalValue) : null
-                  const weekChange = prevValue ? totalValue - prevValue : null
+                  const totalValue = parseFloat(snap.totalValue);
+                  const totalDeposited = parseFloat(snap.totalDeposited);
+                  const pnl = parseFloat(snap.pnl);
+                  const pnlPct = parseFloat(snap.pnlPct);
+                  const olderSnap =
+                    idx < snapshots.length - 1 ? snapshots[idx + 1] : null;
+                  const prevValue = olderSnap
+                    ? parseFloat(olderSnap.totalValue)
+                    : null;
+                  const weekChange = prevValue ? totalValue - prevValue : null;
 
                   return (
                     <TableRow
                       key={snap.id}
                       className="border-b last:border-b-0 hover:bg-muted/30 transition-colors"
                     >
-                      <TableCell className="px-4 py-3">{formatDate(snap.snapshotAt)}</TableCell>
+                      <TableCell className="px-4 py-3">
+                        {formatDate(snap.snapshotAt)}
+                      </TableCell>
                       <TableCell className="px-4 py-3 text-right font-mono font-medium">
                         {formatZAR(totalValue)}
                       </TableCell>
@@ -89,19 +94,21 @@ export default async function SnapshotsPage() {
                       </TableCell>
                       <TableCell
                         className={cn(
-                          'px-4 py-3 text-right font-mono',
-                          pnl >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'
+                          "px-4 py-3 text-right font-mono",
+                          pnl >= 0
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-500 dark:text-red-400",
                         )}
                       >
-                        {pnl >= 0 ? '+' : ''}
+                        {pnl >= 0 ? "+" : ""}
                         {formatZAR(pnl)}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-right">
                         <span
                           className="inline-block rounded px-2 py-0.5 text-xs font-medium"
                           style={{
-                            background: pnl >= 0 ? '#EAF3DE' : '#FCEBEB',
-                            color: pnl >= 0 ? '#3B6D11' : '#A32D2D',
+                            background: pnl >= 0 ? "#EAF3DE" : "#FCEBEB",
+                            color: pnl >= 0 ? "#3B6D11" : "#A32D2D",
                           }}
                         >
                           {formatPct(pnlPct)}
@@ -109,17 +116,19 @@ export default async function SnapshotsPage() {
                         {weekChange !== null && (
                           <div
                             className={cn(
-                              'text-xs mt-1',
-                              weekChange >= 0 ? 'text-emerald-600' : 'text-red-500'
+                              "text-xs mt-1",
+                              weekChange >= 0
+                                ? "text-emerald-600"
+                                : "text-red-500",
                             )}
                           >
-                            {weekChange >= 0 ? '+' : ''}
+                            {weekChange >= 0 ? "+" : ""}
                             {formatZAR(weekChange)}
                           </div>
                         )}
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })}
               </TableBody>
             </Table>
@@ -127,5 +136,5 @@ export default async function SnapshotsPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

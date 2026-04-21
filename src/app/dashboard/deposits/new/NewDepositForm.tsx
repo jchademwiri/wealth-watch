@@ -1,57 +1,59 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import { createDeposit } from '@/actions/deposits'
-import type { Asset } from '@/db/schema'
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { createDeposit } from "@/actions/deposits";
+import type { Asset } from "@/db/schema";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Props {
-  assets: Asset[]
+  assets: Asset[];
 }
 
 export function NewDepositForm({ assets }: Props) {
-  const router = useRouter()
-  const [pending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    const fd = new FormData(e.currentTarget)
+    e.preventDefault();
+    setError(null);
+    const fd = new FormData(e.currentTarget);
 
     startTransition(async () => {
       const result = await createDeposit({
-        assetId: fd.get('assetId') as string,
-        amount: fd.get('amount') as string,
-        depositedAt: new Date(fd.get('date') as string + 'T12:00:00'),
-        notes: (fd.get('notes') as string) || null,
-      })
+        assetId: fd.get("assetId") as string,
+        amount: fd.get("amount") as string,
+        depositedAt: new Date((fd.get("date") as string) + "T12:00:00"),
+        notes: (fd.get("notes") as string) || null,
+      });
 
       if (result.error) {
-        setError(JSON.stringify(result.error))
+        setError(JSON.stringify(result.error));
       } else {
-        router.push('/dashboard/deposits')
+        router.push("/dashboard/deposits");
       }
-    })
+    });
   }
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-lg border bg-card p-4 space-y-4">
+      <div className="rounded-md border bg-card p-4 space-y-4">
         <div>
-          <Label className="mb-1.5 block">Asset <span className="text-red-500">*</span></Label>
+          <Label className="mb-1.5 block">
+            Asset <span className="text-red-500">*</span>
+          </Label>
           <Select name="assetId" defaultValue="" disabled={pending} required>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select an asset…" />
@@ -59,7 +61,8 @@ export function NewDepositForm({ assets }: Props) {
             <SelectContent>
               {assets.map((a) => (
                 <SelectItem key={a.id} value={a.id}>
-                  {a.name}{a.ticker ? ` (${a.ticker})` : ''}
+                  {a.name}
+                  {a.ticker ? ` (${a.ticker})` : ""}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -112,12 +115,14 @@ export function NewDepositForm({ assets }: Props) {
       </div>
 
       {error && (
-        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">{error}</p>
+        <p className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+          {error}
+        </p>
       )}
 
       <Button type="submit" disabled={pending} className="w-full">
-        {pending ? 'Saving…' : 'Log deposit'}
+        {pending ? "Saving…" : "Log deposit"}
       </Button>
     </form>
-  )
+  );
 }

@@ -24,13 +24,13 @@ export function EmptyState({
   className,
 }: Props) {
   return (
-    <Card className={cn("rounded-lg", className)}>
+    <Card className={cn("rounded-md", className)}>
       <CardContent className="p-8 text-center">
         {Icon && (
           <Icon className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
         )}
         {badge && (
-          <div className="mx-auto mb-3 inline-flex rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+          <div className="mx-auto mb-3 inline-flex rounded-md bg-primary/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
             {badge}
           </div>
         )}

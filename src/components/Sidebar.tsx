@@ -38,7 +38,7 @@ export function Sidebar() {
               WealthWatch
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground italic">
-             v0.1.0
+              v0.1.0
               {/* · open source */}
             </p>
           </div>
@@ -66,7 +66,7 @@ export function Sidebar() {
             >
               <span
                 className={cn(
-                  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg transition-colors",
+                  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md transition-colors",
                   active
                     ? "bg-primary/12 text-primary"
                     : "bg-background/70 text-muted-foreground",

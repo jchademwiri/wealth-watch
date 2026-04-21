@@ -1,43 +1,47 @@
-'use client'
+"use client";
 
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
-import { formatZAR, formatPct } from '@/lib/formatting'
-import type { AssetWithLatestSnapshot } from '@/types'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { formatZAR, formatPct } from "@/lib/formatting";
+import type { AssetWithLatestSnapshot } from "@/types";
 
 interface Props {
-  assets: AssetWithLatestSnapshot[]
+  assets: AssetWithLatestSnapshot[];
 }
 
 export function AllocationDonut({ assets }: Props) {
-  const totalValue = assets.reduce((s, a) => s + a.latestValue, 0)
+  const totalValue = assets.reduce((s, a) => s + a.latestValue, 0);
 
   const data = assets
-    .filter(a => a.latestValue > 0)
-    .map(a => ({
-      name:    a.name,
-      value:   a.latestValue,
-      color:   a.color,
-      weight:  totalValue > 0 ? (a.latestValue / totalValue) * 100 : 0,
+    .filter((a) => a.latestValue > 0)
+    .map((a) => ({
+      name: a.name,
+      value: a.latestValue,
+      color: a.color,
+      weight: totalValue > 0 ? (a.latestValue / totalValue) * 100 : 0,
     }))
-    .sort((a, b) => b.value - a.value)
+    .sort((a, b) => b.value - a.value);
 
   const CustomTooltip = ({ active, payload }: any) => {
-    if (!active || !payload?.length) return null
-    const d = payload[0]
+    if (!active || !payload?.length) return null;
+    const d = payload[0];
     return (
-      <div className="rounded-lg border bg-background p-3 text-sm shadow-md">
+      <div className="rounded-md border bg-background p-3 text-sm shadow-md">
         <p className="font-medium">{d.name}</p>
         <p className="font-mono text-foreground">{formatZAR(d.value)}</p>
-        <p className="text-xs text-muted-foreground">{d.payload.weight.toFixed(1)}% of portfolio</p>
+        <p className="text-xs text-muted-foreground">
+          {d.payload.weight.toFixed(1)}% of portfolio
+        </p>
       </div>
-    )
-  }
+    );
+  };
 
-  const hasAllocation = data.length > 0
+  const hasAllocation = data.length > 0;
 
   return (
-    <div className="flex h-full flex-col rounded-lg border bg-card p-4">
-      <h3 className="mb-4 text-sm font-medium text-muted-foreground">Current allocation</h3>
+    <div className="flex h-full flex-col rounded-md border bg-card p-4">
+      <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+        Current allocation
+      </h3>
       {hasAllocation ? (
         <>
           <ResponsiveContainer width="100%" height={180}>
@@ -60,22 +64,35 @@ export function AllocationDonut({ assets }: Props) {
           </ResponsiveContainer>
           <div className="mt-3 space-y-1.5">
             {data.map((d) => (
-              <div key={d.name} className="flex items-center justify-between text-xs">
+              <div
+                key={d.name}
+                className="flex items-center justify-between text-xs"
+              >
                 <span className="flex items-center gap-1.5">
-                  <span className="inline-block h-2 w-2 rounded-sm" style={{ background: d.color }} />
+                  <span
+                    className="inline-block h-2 w-2 rounded-sm"
+                    style={{ background: d.color }}
+                  />
                   <span className="text-muted-foreground">{d.name}</span>
                 </span>
-                <span className="font-mono text-foreground">{d.weight.toFixed(1)}%</span>
+                <span className="font-mono text-foreground">
+                  {d.weight.toFixed(1)}%
+                </span>
               </div>
             ))}
           </div>
         </>
       ) : (
-        <div className="flex h-[260px] flex-col items-center justify-center rounded-lg border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">No allocation available yet.</p>
-          <p className="mt-2 max-w-xs">Create a snapshot or add assets with values to show your current portfolio allocation.</p>
+        <div className="flex h-[260px] flex-col items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/50 text-center text-sm text-muted-foreground">
+          <p className="font-medium text-foreground">
+            No allocation available yet.
+          </p>
+          <p className="mt-2 max-w-xs">
+            Create a snapshot or add assets with values to show your current
+            portfolio allocation.
+          </p>
         </div>
       )}
     </div>
-  )
+  );
 }

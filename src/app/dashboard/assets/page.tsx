@@ -87,7 +87,7 @@ export default async function AssetsPage() {
               className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/35"
             >
               <span
-                className="h-3.5 w-3.5 flex-shrink-0 rounded-full shadow-[0_0_0_5px_color-mix(in_oklch,var(--color-muted)_82%,transparent)]"
+                className="h-3.5 w-3.5 flex-shrink-0 rounded-sm shadow-[0_0_0_5px_color-mix(in_oklch,var(--color-muted)_82%,transparent)]"
                 style={{ background: asset.color }}
               />
               <div className="min-w-0 flex-1">
@@ -109,7 +109,7 @@ export default async function AssetsPage() {
                   href={`/dashboard/assets/${asset.id}`}
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "sm" }),
-                    "rounded-lg text-muted-foreground",
+                    "rounded-md text-muted-foreground",
                   )}
                 >
                   Edit
@@ -141,7 +141,7 @@ export default async function AssetsPage() {
                     className="flex items-center gap-4 px-5 py-4"
                   >
                     <span
-                      className="h-3.5 w-3.5 flex-shrink-0 rounded-full"
+                      className="h-3.5 w-3.5 flex-shrink-0 rounded-sm"
                       style={{ background: asset.color }}
                     />
                     <div className="min-w-0 flex-1">

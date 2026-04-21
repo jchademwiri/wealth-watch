@@ -24,7 +24,7 @@ export function ToggleAssetButton({
           void toggleAssetActive(id);
         })
       }
-      className="rounded-lg text-muted-foreground"
+      className="rounded-md text-muted-foreground"
     >
       {pending ? "…" : isActive ? "Archive" : "Restore"}
     </Button>

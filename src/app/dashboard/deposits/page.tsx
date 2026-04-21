@@ -1,9 +1,9 @@
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { getDeposits, getTotalDeposited } from '@/actions/deposits'
-import { EmptyState } from '@/components/dashboard/EmptyState'
-import { formatDate, formatZAR } from '@/lib/formatting'
-import { DeleteDepositButton } from './DeleteDepositButton'
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { getDeposits, getTotalDeposited } from "@/actions/deposits";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { formatDate, formatZAR } from "@/lib/formatting";
+import { DeleteDepositButton } from "./DeleteDepositButton";
 import {
   Table,
   TableBody,
@@ -12,15 +12,15 @@ import {
   TableHeader,
   TableFooter,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function DepositsPage() {
   const [deposits, totalDeposited] = await Promise.all([
     getDeposits(),
     getTotalDeposited(),
-  ])
+  ]);
 
   return (
     <div className="p-4 md:p-6">
@@ -28,20 +28,22 @@ export default async function DepositsPage() {
         <div>
           <h1 className="text-xl font-semibold">Deposits</h1>
           <p className="text-sm text-muted-foreground">
-            Total invested:{' '}
-            <span className="font-mono font-medium text-foreground">{formatZAR(totalDeposited)}</span>
+            Total invested:{" "}
+            <span className="font-mono font-medium text-foreground">
+              {formatZAR(totalDeposited)}
+            </span>
           </p>
         </div>
         <Link
           href="/dashboard/deposits/new"
-          className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
         >
           <Plus className="h-4 w-4" />
           Log deposit
         </Link>
       </div>
 
-      <div className="rounded-lg border bg-card">
+      <div className="rounded-md border bg-card">
         {deposits.length === 0 ? (
           <EmptyState
             title="No deposits yet."
@@ -72,8 +74,8 @@ export default async function DepositsPage() {
               <TableBody>
                 {deposits.map((deposit) => {
                   const asset = deposit as typeof deposit & {
-                    asset?: { color?: string; name?: string }
-                  }
+                    asset?: { color?: string; name?: string };
+                  };
 
                   return (
                     <TableRow
@@ -86,23 +88,23 @@ export default async function DepositsPage() {
                       <TableCell className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <span
-                            className="h-2 w-2 flex-shrink-0 rounded-full"
-                            style={{ background: asset.asset?.color ?? '#888' }}
+                            className="h-2 w-2 flex-shrink-0 rounded-sm"
+                            style={{ background: asset.asset?.color ?? "#888" }}
                           />
-                          {asset.asset?.name ?? '—'}
+                          {asset.asset?.name ?? "—"}
                         </div>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-right font-mono font-medium">
                         {formatZAR(parseFloat(deposit.amount))}
                       </TableCell>
                       <TableCell className="hidden px-4 py-3 text-muted-foreground md:table-cell">
-                        {deposit.notes ?? '—'}
+                        {deposit.notes ?? "—"}
                       </TableCell>
                       <TableCell className="px-4 py-3">
                         <DeleteDepositButton id={deposit.id} />
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })}
               </TableBody>
               <TableFooter>
@@ -124,5 +126,5 @@ export default async function DepositsPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
