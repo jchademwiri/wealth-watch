@@ -105,11 +105,12 @@ export default async function SnapshotsPage() {
                       </TableCell>
                       <TableCell className="px-4 py-3 text-right">
                         <span
-                          className="inline-block rounded px-2 py-0.5 text-xs font-medium"
-                          style={{
-                            background: pnl >= 0 ? "#EAF3DE" : "#FCEBEB",
-                            color: pnl >= 0 ? "#3B6D11" : "#A32D2D",
-                          }}
+                          className={cn(
+                            "inline-block rounded px-2 py-0.5 text-xs font-medium",
+                            pnlPct >= 0
+                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                              : "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300",
+                          )}
                         >
                           {formatPct(pnlPct)}
                         </span>
@@ -118,8 +119,8 @@ export default async function SnapshotsPage() {
                             className={cn(
                               "text-xs mt-1",
                               weekChange >= 0
-                                ? "text-emerald-600"
-                                : "text-red-500",
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-red-500 dark:text-red-400",
                             )}
                           >
                             {weekChange >= 0 ? "+" : ""}

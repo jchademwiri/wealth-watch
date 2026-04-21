@@ -88,17 +88,17 @@ export function PortfolioChart({ snapshots }: Props) {
               </defs>
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="hsl(var(--border))"
-                strokeOpacity={0.5}
+                stroke="currentColor"
+                strokeOpacity={0.2}
               />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "currentColor" }}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "currentColor" }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v) => `R${(v / 1000).toFixed(1)}k`}
